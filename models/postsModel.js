@@ -52,7 +52,7 @@ module.exports = class PostModel {
         const cursor = await client.db("SocialMedia").collection("posts").updateOne(
             query,
             {
-                $set:{
+                $set: {
                     text: text,
                     date: formatDate,
                 }
@@ -63,22 +63,9 @@ module.exports = class PostModel {
     }
     static async deletePostByID(id) {
         console.log("[deleteMovieByID]")
-        let objectId = new ObjectId(id)
+        let objectId = new ObjectId(id);
 
-        let query = {
-            _id: objectId,
-            deleted_at: null
-        }
-
-        const cursor = await client.db("SocialMedia").collection("posts").updateOne(
-            query,
-            {
-                $set: {
-                    deleted_at: new Date()
-                }
-            }
-        )
-
-        return cursor;
+        await client.db("SocialMedia").collection("posts").deleteOne(
+            { "_id": objectId });
     }
 }

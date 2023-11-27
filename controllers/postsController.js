@@ -84,15 +84,7 @@ module.exports = class PostsController {
 
         try {
             const post = await PostModel.deletePostByID(postId)
-
-            if (!post.matchedCount) {
-                res.status(404).json(`Nenhum post encontrado com o ID ${postId}`)
-            } else if (!post.modifiedCount) {
-                res.status(404).json(`Post encontrado com o ID ${postId} não foi deletado`)
-            }
-
-            console.log(post)
-
+        
             res.status(200).json(post)
         } catch (error) {
             console.log(`[Posts Controller Error] ${error}`)
