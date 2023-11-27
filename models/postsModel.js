@@ -1,5 +1,6 @@
 const client = require('../config/dbConnection');
 const ObjectId = require('mongodb').ObjectId;
+const moment = require('moment');
 
 module.exports = class PostModel {
 
@@ -23,21 +24,26 @@ module.exports = class PostModel {
     }
     static async addPost(data) {
         console.log(`[Movie Model] - Add Movie ${data}`);
+        let date = new Date();
+        const formatDate = moment(date).format('DD/MM/YYYY HH:mm');
+
         try {
             const newPost = {
-                text: data.text, favoriteUsers: data.favoriteUsers, authorPost: data.authorPost,
-                date: new Date()
+                text: data.text, favoriteUsers: [], authorPost: data.authorPost,
+                date: formatDate,
             }
             const addedPost = await client.db("SocialMedia").collection("posts").insertOne(newPost);
             console.log(`New Post inserted with the following id ${addedPost.insertedId}`);
             return addedPost;
         } catch (error) {
-            console.log(`[movieService] Error: ${error}`);
+            console.log(`[postService] Error: ${error}`);
         }
     }
-    static async updatePostByID(id, body) {
-        console.log("[updateMovieByID]")
-        let objectId = new ObjectId(id)
+    static async updatePostByID(id, text) {
+        console.log("[updatePostByID]")
+        let objectId = new ObjectId(id);
+        let date = new Date();
+        const formatDate = moment(date).format('DD/MM/YYYY HH:mm');
 
         let query = {
             _id: objectId,
@@ -46,7 +52,10 @@ module.exports = class PostModel {
         const cursor = await client.db("SocialMedia").collection("posts").updateOne(
             query,
             {
-                $set: body
+                $set:{
+                    text: text,
+                    date: formatDate,
+                }
             }
         )
 

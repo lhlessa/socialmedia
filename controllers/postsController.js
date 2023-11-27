@@ -3,6 +3,7 @@ const PostModel = require("../models/postsModel");
 
 const schema = Joi.object().keys({
     text: Joi.string().required().min(1).max(200),
+    authorPost: Joi.string().required()
 })
 module.exports = class PostsController {
     static async getPosts(req, res, next) {
@@ -39,6 +40,7 @@ module.exports = class PostsController {
         console.log('[Add Post Controller]', req.body);
         const{error, value} = schema.validate(req.body);
         if(error){
+            console.log(error);
             const result = { 
                 msg: "Post não incluído. Campos não foram preenchidos corretamente", 
                 error: error.details}
@@ -47,13 +49,18 @@ module.exports = class PostsController {
         }
         try {
             const addedPost = await PostModel.addPost(req.body);
+            console.log(req.body);
             res.status(200).json(addedPost);
         } catch (error) {
             res.status(500).json({ error: error });
+            console.log(error);
         }
     }
     static async updatePost(req, res, next) {
         const id = req.params.id;
+        console.log(id);
+        const text = req.body.text;
+        console.log(text);
         const{error, value} = schema.validate(req.body);
         if(error){
             const result = { 
@@ -63,7 +70,7 @@ module.exports = class PostsController {
                 return;
         }
         try {
-            const updatedPost = await PostModel.updatePostByID(id, req.body);
+            const updatedPost = await PostModel.updatePostByID(id, text);
             res.status(200).json(updatedPost);
         } catch (error) {
             res.status(500).json({ error: error });
