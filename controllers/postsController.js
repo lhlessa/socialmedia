@@ -91,6 +91,45 @@ module.exports = class PostsController {
             res.status(500).json({ error: error })
         }
     }
+     static async addPost(req, res, next) {
+        console.log('[Add Post Controller]', req.body);
+        const{error, value} = schema.validate(req.body);
+        if(error){
+            console.log(error);
+            const result = { 
+                msg: "Post não incluído. Campos não foram preenchidos corretamente", 
+                error: error.details}
+                res.status(404).json(result);
+                return;
+        }
+        try {
+            const addedPost = await PostModel.addPost(req.body);
+            console.log(req.body);
+            res.status(200).json(addedPost);
+        } catch (error) {
+            res.status(500).json({ error: error });
+            console.log(error);
+        }
+        
+    }
+    static async likePost(req, res, next) {
+        const idPost = req.params.id;
+        console.log(id);
+        const{error, value} = schema.validate(req.body);
+        if(error){
+            const result = { 
+                msg: "Não foi possível curtir o post", 
+                error: error.details}
+                res.status(404).json(result);
+                return;
+        }
+        try {
+            const updatedPost = await PostModel.likePostByID(idPost);
+            res.status(200).json(updatedPost);
+        } catch (error) {
+            res.status(500).json({ error: error });
+        }
+    }
 
 }
 

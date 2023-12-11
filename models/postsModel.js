@@ -68,4 +68,22 @@ module.exports = class PostModel {
         await client.db("SocialMedia").collection("posts").deleteOne(
             { "_id": objectId });
     }
+    static async likePostByID(id) {
+        console.log("[likePostByID]")
+        let objectId = new ObjectId(id);
+        let query = {
+            _id: objectId,
+        }
+
+        const cursor = await client.db("SocialMedia").collection("posts").updateOne(
+            query,
+            {
+                $set: {
+        
+                }
+            }
+        )
+
+        return cursor;
+    }
 }

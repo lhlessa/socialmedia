@@ -7,3 +7,6 @@ routes.getOnePost(app);
 routes.addPost(app);
 routes.updatePost(app);
 routes.deletePost(app);
+routes.addUser(app);
+routes.likePost(app);
+routes.login(app);
